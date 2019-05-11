@@ -20,7 +20,7 @@ from imutils import contours
 from imutils import perspective
 from keras.models import load_model
 from scipy.spatial import distance as dist
-from skimage import io
+# from skimage import io
 from skimage.measure import compare_ssim
 
 try:
@@ -44,8 +44,9 @@ import tensorflow as tf
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024
 
-datestring = time.strftime("%Y_%m_%d_%H:%M")
-attrpath = "new_data_row_by_row.csv"
+datestring = time.strftime("%Y_%m_%d_%H_%M_%S")
+csvpath = "new_data_row_by_row.csv"
+attrpath = 'tmp/tmp.csv'
 modelpath = "model.hdf5"
 labelpath = "kerasmodel.txt"
 tmppath = "tmp"
@@ -443,9 +444,9 @@ def classify_image():
     labels = loadlabels(labelpath)
     categoryscore = predict(df, image, model)
     result = {"Category": categoryscore[0], "Probability": categoryscore[1]}
-    with open('new_data_row_by_row.csv', 'a') as f:
-        f.write(','.join([categoryscore[0], float(flask.request.form.get('weightattr')), length, width, height,
-                          now.strftime('%Y-%m-%d %H:%M:%S'), topimgpath, frontimgpath]))
+    with open(csvpath, 'a') as f:
+        f.write(','.join([categoryscore[0], flask.request.form.get('weightattr'), str(length), str(width), str(height),
+                          str(now.strftime('%Y-%m-%d %H:%M:%S')), str(topimgpath), str(frontimgpath)]))
         f.write("\n")
     print (result)
     return json.dumps(result)
