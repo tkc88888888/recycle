@@ -4,3 +4,6 @@
 
 
 Note: previously training is successful with 4 column attributes, now theres 8 column in csv file needed to be trained. Also the creation of top image paths which will be used for training requires the edit of dataset.py file under load_waste_images_labels() function. This is because we no longer need to extract images and assign them label using their second last path name as the label category.
+
+
+at current directory, run: python mixed_training.py --dataset Wastes\ Dataset/
