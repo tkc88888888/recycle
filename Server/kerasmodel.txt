@@ -1,0 +1,6 @@
+thrash
+plastic
+paper
+glass
+cardboard
+aluminium
