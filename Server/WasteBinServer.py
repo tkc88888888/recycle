@@ -15,7 +15,7 @@ import keras
 import imutils
 import pandas as pd
 from PIL import Image
-from flask import Flask
+from flask import Flask, jsonify, render_template
 from imutils import contours
 from imutils import perspective
 from keras.models import load_model
@@ -47,16 +47,17 @@ app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024
 global datestring
 
 datestring = time.strftime("%Y_%m_%d_%H:%M")
-attrpath = "/home/kc/Downloads/keras-multi-input/new_imagepath_and_attributes_come_in_here_row_by_row.csv"
-modelpath = "/home/kc/Downloads/keras-multi-input/model.hdf5"
-labelpath = "/home/kc/Downloads/keras-multi-input/kerasmodel.txt"
+attrpath = "new_data_row_by_row.csv"
+modelpath = "model.hdf5"
+labelpath = "kerasmodel.txt"
 tmppath = "tmp"
 
-image0top = "/home/kc/Downloads/keras-multi-input/latest-without-waste-top.jpg"
-image1top = "/home/kc/Downloads/keras-multi-input/Collected_Top_Images/image1top.jpg"
-image0front = "/home/kc/Downloads/keras-multi-input/latest-without-waste-front.jpg"
-image1front = "/home/kc/Downloads/keras-multi-input/Collected_Front_Images/image1front.jpg"
-
+image0top = "latest-without-waste-top.jpg"
+image1top = "Collected_Top_Images/image1top.jpg"
+image0front = "latest-without-waste-front.jpg"
+image1front = "Collected_Front_Images/image1front.jpg"
+unlabeled_folder = "static/unlabeled"
+labeled_folder = "static/labeled"
 
 ####################################################################################
 # FROM SIZER.PY
@@ -326,6 +327,52 @@ def getsize(image0top, image1top, image0front, image1front):
     print ("Volume is : {}".format(Volume))
     return (length, width, height)
 
+
+@app.route("/api/images/unlabeled/")
+def get_unlabeled_images():
+    """Get the list of unlabeled images."""
+    if not os.path.exists(unlabeled_folder):
+        os.mkdir(unlabeled_folder)
+    unlabeled_images = [f for f in os.listdir(unlabeled_folder)]
+    return jsonify(unlabeled_images)
+
+
+@app.route('/label')
+def label():
+    return render_template("label.html", **{
+        "product_name": "Waste Bin",
+        "product_name_short": "Waste Bin"
+    })
+
+
+@app.route("/api/images/set_label", methods=['POST'])
+def set_image_label():
+    if not flask.request.json.get("image"):
+        return jsonify({
+            "image": "This field is required."
+        }), 400
+    if not flask.request.json.get("label"):
+        return jsonify({
+            "label": "This field is required."
+        }), 400
+    imgname = flask.request.json.get("image")
+    label = flask.request.json.get("label")
+    image_path = os.path.join(unlabeled_folder, imgname)
+    try:
+        os.makedirs(os.path.join(labeled_folder, label))
+    except OSError:
+        pass
+    target_path = os.path.join(labeled_folder, label, imgname)
+
+    if not os.path.isfile(image_path):
+        return jsonify({
+            "image": "File not found."
+        }), 404
+    os.rename(image_path, target_path)
+
+    return jsonify({
+        "status": "Ok"
+    })
 
 ####################################################################################
 # FROM SERVING.PY

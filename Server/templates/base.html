@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+  <title>{{ product_name }}</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+  <!-- Bootstrap core CSS -->
+  <link href="{{ url_for('static', filename='MDB-Pro_4.7.6/css/bootstrap.min.css') }}" rel="stylesheet">
+  <!-- Material Design Bootstrap -->
+  <!-- <link href="css/mdb.min.css" rel="stylesheet"> -->
+  <link href="{{ url_for('static', filename='MDB-Pro_4.7.6/css/mdb.min.css') }}" rel="stylesheet">
+  <!-- Your custom styles (optional) -->
+  <!-- <link href="css/style.min.css" rel="stylesheet"> -->
+  <link href="{{ url_for('static', filename='MDB-Pro_4.7.6/css/style.min.css') }}" rel="stylesheet">
+  <style type="text/css">
+    html,
+    body,
+    header,
+    .view {
+      height: 100%;
+    }
+
+    @media (max-width: 740px) {
+
+      html,
+      body,
+      header,
+      .view {
+        height: 1000px;
+      }
+    }
+
+    @media (min-width: 800px) and (max-width: 850px) {
+
+      html,
+      body,
+      header,
+      .view {
+        height: 650px;
+      }
+    }
+
+    @media (min-width: 800px) and (max-width: 850px) {
+      .navbar:not(.top-nav-collapse) {
+        background: #1C2331 !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+    <div class="container">
+
+      <!-- Brand -->
+      <a class="navbar-brand" href="{{ url_for('index') }}">
+        <strong>{{ product_name_short }}</strong>
+      </a>
+
+      <!-- Collapse -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Links -->
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <!-- Left -->
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{{ url_for('index') }}">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+
+        <!-- Right -->
+        <!-- <ul class="navbar-nav nav-flex-icons">
+          <li class="nav-item">
+            <a href="https://www.facebook.com/mdbootstrap" class="nav-link" target="_blank">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="https://twitter.com/MDBootstrap" class="nav-link" target="_blank">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="https://github.com/mdbootstrap/bootstrap-material-design"
+              class="nav-link border border-light rounded" target="_blank">
+              <i class="fab fa-github mr-2"></i>MDB GitHub
+            </a>
+          </li>
+        </ul> -->
+      </div>
+
+    </div>
+  </nav>
+  <!-- Navbar -->
+
+  <!-- Full Page Intro -->
+  {% block full_page_intro %}
+  <div class="view full-page-intro"
+    style="background-image: url('https://mdbootstrap.com/img/Photos/Others/images/78.jpg'); background-repeat: no-repeat; background-size: cover;">
+
+    <!-- Mask & flexbox options-->
+    <div class="mask rgba-black-light d-flex justify-content-center align-items-center">
+
+      <!-- Content -->
+      <div class="container">
+
+        <!--Grid row-->
+        <div class="row wow fadeIn">
+
+          <!--Grid column-->
+          <div class="col-md-6 mb-4 white-text text-center text-md-left">
+
+            <h1 class="display-4 font-weight-bold">Change tomorrow, today. Recycle.</h1>
+
+            <hr class="hr-light">
+
+            <!-- <p>
+              <strong>Best & free guide of responsive web design</strong>
+            </p> -->
+
+            <p class="mb-4 d-none d-md-block">
+              <strong>Recycling is a key element in the maintenance of environmental health and sustainability. This is
+                because the benefits of recycling outweigh the benefits of raw production. Everybody knows that
+                recycling is a good thing, but many people, though convinced, have no idea how much of a good thing it
+                really is.</strong>
+            </p>
+
+            <!-- <a target="_blank" href="https://mdbootstrap.com/education/bootstrap/" class="btn btn-indigo btn-lg">Start
+              free tutorial
+              <i class="fas fa-graduation-cap ml-2"></i>
+            </a> -->
+
+          </div>
+          <!--Grid column-->
+
+
+
+
+        </div>
+        <!--Grid row-->
+
+      </div>
+      <!-- Content -->
+
+    </div>
+    <!-- Mask & flexbox options-->
+
+  </div>
+  {% endblock %}
+  <!-- Full Page Intro -->
+
+  <!--Main layout-->
+  <main>
+    <div class="container">
+
+      {% block contents %}
+      <!--Section: Main info-->
+      <section class="mt-5 wow fadeIn">
+
+        <!--Grid row-->
+        <div class="row">
+
+          <!--Grid column-->
+          <div class="col-md-6 mb-4">
+            <!-- <img src="https://mdbootstrap.com/img/Marketing/mdb-press-pack/mdb-main.jpg"
+              class="img-fluid z-depth-1-half" alt=""> -->
+          </div>
+          <!--Grid column-->
+
+          <!--Grid column-->
+          <div class="col-md-6 mb-4">
+
+            <!-- Main heading -->
+            <h3 class="h3 mb-3">{{ product_name}} - Waste Sorting System</h3>
+            <p>AI-powered waste sorting solution</p>
+            <p>Read details below to learn more.</p>
+            <!-- Main heading -->
+
+            <hr>
+
+            <!-- <p>
+              <strong>400+</strong> material UI elements,
+              <strong>600+</strong> material icons,
+              <strong>74</strong> CSS animations, SASS files, templates, tutorials and many more.
+              <strong>Free for personal and commercial use.</strong>
+            </p> -->
+
+            <!-- CTA -->
+            <!-- <a target="_blank" href="https://mdbootstrap.com/docs/jquery/getting-started/download/"
+              class="btn btn-indigo btn-md">Download
+              <i class="fas fa-download ml-1"></i>
+            </a>
+            <a target="_blank" href="https://mdbootstrap.com/docs/jquery/components/" class="btn btn-indigo btn-md">Live
+              demo
+              <i class="far fa-image ml-1"></i>
+            </a> -->
+
+          </div>
+          <!--Grid column-->
+
+        </div>
+        <!--Grid row-->
+
+      </section>
+      <!--Section: Main info-->
+
+      <hr class="my-5">
+
+      <!--Section: More-->
+      <section class="mb-5">
+
+        <h2 class="my-5 h3 text-center">Benefits of recycling</h2>
+
+        <!--First row-->
+        <div class="row features-small mt-5 wow fadeIn">
+
+          <!--Grid column-->
+          <div class="col-xl-4 col-lg-6">
+            <!--Grid row-->
+            <div class="row">
+              <div class="col-2">
+                <i class="fab fa-firefox fa-2x mb-1 green-text" aria-hidden="true"></i>
+              </div>
+              <div class="col-10 mb-2 pl-3">
+                <h5 class="feature-title font-bold mb-1">Waste Reduction</h5>
+                <p class="grey-text mt-2">Landfills are ill-equipped to handle the amount of trash dumped each year in
+                  the United States. For this reason, overflow is sent to incinerators. Certain waste releases toxic
+                  chemicals into the air when burned, wreaking havoc on the environment. One of the benefits of
+                  recycling is that it significantly reduces the amount of waste sent to landfills and to incinerators,
+                  which ultimately translates into less pollution. Everything that we recycle has an impact on what
+                  doesn’t find an incinerator, as failure to recycle results in the needless and wasteful discard of
+                  potentially useful items.
+                </p>
+              </div>
+            </div>
+            <!--/Grid row-->
+          </div>
+          <!--/Grid column-->
+
+          <!--Grid column-->
+          <div class="col-xl-4 col-lg-6">
+            <!--Grid row-->
+            <div class="row">
+              <div class="col-2">
+                <i class="fas fa-level-up-alt fa-2x mb-1 green-text" aria-hidden="true"></i>
+              </div>
+              <div class="col-10 mb-2">
+                <h5 class="feature-title font-bold mb-1">Conservation of Natural Resources</h5>
+                <p class="grey-text mt-2">Recycling also decreases our dependence on natural resources like certain
+                  minerals, water and wood, of which there is a finite supply. Based on our current need for raw
+                  materials, without recycling, the earth could not sustain the level of excavation required to support
+                  the economy. Wood, water, and metals can all be reduced and reused to the benefit of both the economy
+                  and humanity.
+                </p>
+              </div>
+            </div>
+            <!--/Grid row-->
+          </div>
+          <!--/Grid column-->
+
+          <!--Grid column-->
+          <div class="col-xl-4 col-lg-6">
+            <!--Grid row-->
+            <div class="row">
+              <div class="col-2">
+                <i class="fas fa-comments fa-2x mb-1 green-text" aria-hidden="true"></i>
+              </div>
+              <div class="col-10 mb-2">
+                <h5 class="feature-title font-bold mb-1">Reduction of Industrial Pollution</h5>
+                <p class="grey-text mt-2">The collection of raw materials, like oil, requires heavy machinery. Most of
+                  these machines run on diesel fuel, which releases toxins into the air. With recycling, the need for
+                  raw materials is decreased, and with it, the pollution created by raw material excavation. Oil can be
+                  recycled countless times. If we chose not to recycle oil, we would need to consume it at a much higher
+                  rate in order to support the economy.
+                </p>
+              </div>
+            </div>
+            <!--/Grid row-->
+          </div>
+          <!--/Grid column-->
+
+        </div>
+        <!--/First row-->
+
+        <!--Second row-->
+        <div class="row features-small mt-4 wow fadeIn">
+
+          <!--Grid column-->
+          <div class="col-xl-4 col-lg-6">
+            <!--Grid row-->
+            <div class="row">
+              <div class="col-2">
+                <i class="fas fa-cubes fa-2x mb-1 green-text" aria-hidden="true"></i>
+              </div>
+              <div class="col-10 mb-2">
+                <h5 class="feature-title font-bold mb-1">Reduction of Greenhouse Gas Emissions</h5>
+                <p class="grey-text mt-2">Since recycling reduces the carbon footprint of industrialization via
+                  reduction and reuse of materials already in circulation, it is also effective in the reduction of
+                  greenhouse gas emissions created by manufacturers. Many manufacturers are finding that they can save
+                  money by reselling recycled product, and they choose not to run their factories at full power as a
+                  result. This results in lower fuel emissions.</p>
+              </div>
+            </div>
+            <!--/Grid row-->
+          </div>
+          <!--/Grid column-->
+
+          <!--Grid column-->
+          <div class="col-xl-4 col-lg-6">
+            <!--Grid row-->
+            <div class="row">
+              <div class="col-2">
+                <i class="fas fa-question fa-2x mb-1 green-text" aria-hidden="true"></i>
+              </div>
+              <div class="col-10 mb-2">
+                <h5 class="feature-title font-bold mb-1">Recycling Creates Jobs</h5>
+                <p class="grey-text mt-2">Finally, recycling creates jobs in recycling plants and other manufacturing
+                  facilities that use recycled material. For this reason, recycling can help the economy as well as the
+                  environment. It is important to note that recycling facilities are growing in number and will need
+                  labor to fill important positions. Manufacturers who use recycled material will soon have the same
+                  need.
+                </p>
+              </div>
+            </div>
+            <!--/Grid row-->
+          </div>
+          <!--/Grid column-->
+
+          <!--Grid column-->
+          <div class="col-xl-4 col-lg-6">
+            <!--Grid row-->
+            <div class="row">
+              <div class="col-2">
+                <i class="fas fa-code fa-2x mb-1 green-text" aria-hidden="true"></i>
+              </div>
+              <div class="col-10 mb-2">
+                <h5 class="feature-title font-bold mb-1">Energy Efficiency</h5>
+                <p class="grey-text mt-2">One of the more subtle benefits of recycling is that it reduces energy
+                  consumption. It is more energy efficient to reduce and reuse material already in circulation than it
+                  is to produce the same material from scratch. Plastic bottles can be reduced and made into gloves.
+                  Newspaper can be recycled and reused in printing. Almost anything can be reduced and made into
+                  something else as long as its reduction is not toxic to the environment.
+                  it.
+                </p>
+              </div>
+            </div>
+            <!--/Grid row-->
+          </div>
+          <!--/Grid column-->
+
+        </div>
+        <!--/Second row-->
+
+      </section>
+      <!--Section: More-->
+
+      {% endblock %}
+    </div>
+  </main>
+  <!--Main layout-->
+
+  <!-- SCRIPTS -->
+  <!-- JQuery -->
+  <!-- <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script> -->
+  <script type="text/javascript"
+    src="{{ url_for('static', filename='MDB-Pro_4.7.6/js/jquery-3.3.1.min.js') }}"></script>
+  <!-- Bootstrap tooltips -->
+  <!-- <script type="text/javascript" src="js/popper.min.js"></script> -->
+  <script type="text/javascript" src="{{ url_for('static', filename='MDB-Pro_4.7.6/js/popper.min.js') }}"></script>
+  <!-- Bootstrap core JavaScript -->
+  <!-- <script type="text/javascript" src="js/bootstrap.min.js"></script> -->
+  <script type="text/javascript" src="{{ url_for('static', filename='MDB-Pro_4.7.6/js/bootstrap.min.js') }}"></script>
+  <!-- MDB core JavaScript -->
+  <!-- <script type="text/javascript" src="js/mdb.min.js"></script> -->
+  <script type="text/javascript" src="{{ url_for('static', filename='MDB-Pro_4.7.6/js/mdb.min.js') }}"></script>
+  <!-- Initializations -->
+  <script type="text/javascript">
+    // Animations initialization
+    new WOW().init();
+  </script>
+  {% block scripts %}
+  {% endblock %}
+</body>
+
+</html>

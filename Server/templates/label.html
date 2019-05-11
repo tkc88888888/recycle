@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block full_page_intro %}
+<br>
+<br>
+<br>
+<br>
+<br>
+{% endblock %}
+
+{% block contents %}
+<div class="row">
+    <div id="img-placeholder" class="col text-center">
+    </div>
+</div>
+
+<p id="description-msg" class="text-center mt-3" style="display: hidden;">Can you please help us label the image above?
+    What
+    is the type of
+    object shown in the image above?</p>
+<h5 id="no-img-msg" class="text-center" style="display: hidden;">No unlabeled images found.</h5>
+
+<div class="row mt-5">
+    <div class="col-md-8 offset-md-2">
+        <div id="label-buttons-toolbar" style="display: hidden;" class="btn-toolbar" role="toolbar"
+            aria-label="Toolbar with button groups">
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+                <button type="button" class="btn btn-green">thrash</button>
+                <button type="button" class="btn btn-green">aluminium</button>
+                <button type="button" class="btn btn-green">cardboard</button>
+                <button type="button" class="btn btn-green">glass</button>
+                <button type="button" class="btn btn-green">paper</button>
+                <button type="button" class="btn btn-green">plastic</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function loadFirstUnlabeledImage() {
+        $("#img-placeholder").empty();
+        $("#no-img-msg").hide();
+        $("#label-buttons-toolbar").hide();
+        $("#description-msg").hide();
+
+        $.get("{{ url_for('get_unlabeled_images') }}", function (data) {
+            var unlabeledImages = data;
+            console.log("unlabeledImages:");
+            console.log(unlabeledImages);
+
+            if (unlabeledImages.length == 0) {
+                $("#no-img-msg").show();
+                $("#label-buttons-toolbar").hide();
+                $("#description-msg").hide();
+                setTimeout(function () { loadFirstUnlabeledImage() }, 1000);
+                return;
+            }
+
+            $("#img-placeholder").append(
+                $("<img>", {
+                    src: "{{ url_for('static', filename='unlabeled/') }}" + unlabeledImages[0],
+                    class: "img-fluid",
+                    alt: "Error loading training image",
+                    "data-filename": unlabeledImages[0]
+                })
+            );
+            $("#label-buttons-toolbar").show();
+            $("#description-msg").show();
+        });
+    }
+
+    $(function () {
+        loadFirstUnlabeledImage();
+
+        $("#label-buttons-toolbar button").click(function () {
+            var image = $("#img-placeholder img").data("filename");
+            console.log("image: " + image);
+            var label = $(this).text();
+            console.log("label: " + label);
+
+            $.ajax({
+                type: "POST",
+                url: "{{ url_for('set_image_label') }}",
+                data: JSON.stringify({
+                    image: image,
+                    label: label
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    loadFirstUnlabeledImage();
+                },
+                failure: function (errMsg) {
+                    alert(errMsg);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}
