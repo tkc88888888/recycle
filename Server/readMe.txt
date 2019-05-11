@@ -4,4 +4,4 @@
 
 3)The kerasmodel.txt and model.hdf5 are the label and model for running prediction.
 
-4)Database should be to save data as seen in 'example database.png' into 'new_imagepath_and_attributes_come_in_here_row_by_row.csv' 
+4)Database should be to save data as seen in 'example database.png' into 'new_data_row_by_row.csv' 
