@@ -448,6 +448,7 @@ def classify_image():
         f.write(','.join([categoryscore[0], flask.request.form.get('weightattr'), str(length), str(width), str(height),
                           str(now.strftime('%Y-%m-%d %H:%M:%S')), str(topimgpath), str(frontimgpath)]))
         f.write("\n")
+    saveDB(now, categoryscore[0], flask.request.form.get('weightattr'), length, width, height, topimgpath, frontimgpath)
     print (result)
     return json.dumps(result)
 
@@ -606,18 +607,23 @@ def predict(df, image, model):
     return categoryscore
 
 
-def saveDB(imgpath, weight, length, width, height):
-    t = datetime.datetime.now().strftime(
-        '%Y-%m-%d %H:%M:%S')  # get time infomation in year month date hour minute seconds format
-    sql = "INSERT INTO data_log (Imgpath, Date_Time,weight,length,width,height) VALUES (%s,%s,%s,%s,%s,%s)"  # to simplify the info insertion command(looks more neat), can actually write in c.execute line
-    val = (imgpath, t, weight, length, width, height)  # arguments for input info, reading each variable as string.
+def saveDB(now, category, weight, length, width, height, topimgpath, frontimgpath):
+    t = now.strftime('%Y-%m-%d %H:%M:%S')  # get time infomation in year month date hour minute seconds format
+    sql = "INSERT INTO data_log (DATE_TIME, WASTE_CATEGORY, WEIGHT, LENGTH, WIDTH, HEIGHT, TOP_IMAGE_PATH, FRONT_IMAGE_PATH) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"  # to simplify the info insertion command(looks more neat), can actually write in c.execute line
+    weight = float(weight)
+    val = (t, category, weight, length, width, height, topimgpath,
+           frontimgpath)  # arguments for input info, reading each variable as string.
 
     try:  # try to execute insertion of info to databse and commit/save it, except when it fails, rollback/restore previous database state
         c.execute(sql, val)
         db.commit()
 
-    except:
+    except (MySQLdb.Error, MySQLdb.Warning) as e:
         db.rollback()
+        print 'error while saving to mysql: {}'.format(e)
+
+    except NameError:
+        print 'not connected to mysql'
 
 
 create_tmp('tmp')
@@ -625,10 +631,10 @@ model = loadmodel(modelpath)
 model._make_predict_function()
 
 try:
-    db = MySQLdb.connect("localhost", "remote", "remote",
-                         "mydb")  # Calling imported module mysqldb to allow connection, input arguments are self set: host= localhost, username=remote, password=remote, database=mydb
+    db = MySQLdb.connect("localhost", "recycle", "recycle",
+                         "wastedb")  # Calling imported module mysqldb to allow connection, input arguments are self set: host= localhost, username=remote, password=remote, database=mydb
     c = db.cursor()
-except:
+except (MySQLdb.Error, MySQLdb.Warning) as e:
     print('database connection error')
 
 app.run(threaded=True, host='0.0.0.0', port=os.environ.get('PORT', 8000))
