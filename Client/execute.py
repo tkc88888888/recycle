@@ -18,7 +18,7 @@ image0top = "/home/pi/image0top.jpg"
 image0front = "/home/pi/image0front.jpg"
 image1top = "/home/pi/image1top.jpg"
 image1front = "/home/pi/image1front.jpg"
-
+url = 'http://wastesorting.dlinkddns.com:8000'
 sizeTop = "/home/pi/plasticTop.jpg"
 sizeFront = "/home/pi/plasticFront.jpg"
 
@@ -55,6 +55,22 @@ def FrontCamera(frontimagepath):
     print("saved Front Image")
 
 
+def update_0_images():
+    TopCamera(image0top)
+    FrontCamera(image0front)
+    file_list = [('image0top', ('image0top.jpg', open('image0top.jpg', 'rb'), 'image/jpg')),
+                 ('image0front', ('image0front.jpg', open('image0front.jpg', 'rb'), 'image/jpg'))]
+    try:
+        response = requests.post('{}/update_0_images'.format(url), files=file_list)
+        print(response.text)
+        return response.json()
+        # dict = response.text
+        # return dict
+
+    except requests.exceptions.RequestException as e:
+        print("Error sending reading: {}".format(e))
+
+
 def RequestPost(topimagepath, frontimagepath, attr):
     data = {"weightattr": attr}
 
@@ -64,7 +80,7 @@ def RequestPost(topimagepath, frontimagepath, attr):
                  ('image1front', ('image1front.jpg', open('image1front.jpg', 'rb'), 'image/jpg'))]
 
     try:
-        response = requests.post('http://wastesorting.dlinkddns.com:8000/classify_image', files=file_list, data=data)
+        response = requests.post('{}/classify_image'.format(url), files=file_list, data=data)
         print(response.text)
         return response.json()
         # dict = response.text
@@ -73,7 +89,7 @@ def RequestPost(topimagepath, frontimagepath, attr):
     except requests.exceptions.RequestException as e:
         print("Error sending reading: {}".format(e))
     """
-    response = requests.post('http://wastesorting.dlinkddns.com:8000/classify_image', files=file_list, data=data)
+    response = requests.post('{}/classify_image'.format(url), files=file_list, data=data)
     print(response.text)
     return response.json()
     #print(' time taken: {} '.format(datetime.datetime.now()-t1))

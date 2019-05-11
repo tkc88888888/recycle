@@ -451,6 +451,22 @@ def classify_image():
     return json.dumps(result)
 
 
+@app.route('/update_0_images', methods=['POST'])
+def update_0_images():
+    if flask.request.files.get("image0top"):
+        # read the image in PIL format
+        image = flask.request.files.get("image0top").read()
+        image = Image.open(io.BytesIO(image))
+        print('saved image0top')
+        image.save(image0top, quality=80, optimize=True, progressive=True)
+
+    if flask.request.files.get("image0front"):
+        image = flask.request.files.get("image0front").read()
+        image = Image.open(io.BytesIO(image))
+        print('saved image0front')
+        image.save(image0front, quality=80, optimize=True, progressive=True)
+
+
 @app.route('/status', methods=['GET'])
 def status():
     return 'online'
