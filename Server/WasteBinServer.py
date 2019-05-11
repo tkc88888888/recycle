@@ -11,8 +11,8 @@ import cv2
 # import request
 # import parse
 import flask
-import keras
 import imutils
+import keras
 import pandas as pd
 from PIL import Image
 from flask import Flask, jsonify, render_template
@@ -44,8 +44,6 @@ import tensorflow as tf
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024
 
-global datestring
-
 datestring = time.strftime("%Y_%m_%d_%H:%M")
 attrpath = "new_data_row_by_row.csv"
 modelpath = "model.hdf5"
@@ -53,11 +51,22 @@ labelpath = "kerasmodel.txt"
 tmppath = "tmp"
 
 image0top = "latest-without-waste-top.jpg"
-image1top = "Collected_Top_Images/image1top.jpg"
+# image1top = "Collected_Top_Images/image1top.jpg"
 image0front = "latest-without-waste-front.jpg"
-image1front = "Collected_Front_Images/image1front.jpg"
+# image1front = "Collected_Front_Images/image1front.jpg"
+top_image_folder = "Collected_Top_Images"
+front_image_folder = "Collected_Front_Images"
 unlabeled_folder = "static/unlabeled"
 labeled_folder = "static/labeled"
+try:
+    os.makedirs(top_image_folder)
+except OSError:
+    pass
+try:
+    os.makedirs(front_image_folder)
+except OSError:
+    pass
+
 
 ####################################################################################
 # FROM SIZER.PY
@@ -102,6 +111,7 @@ def preprocess_image(image0, image1, X, Y):
     (cnts, _) = contours.sort_contours(cnts)
 
     return cnts, image
+
 
 def findmaxdimension(cnts, image, pixelsPerMetric):
     dimensions = []
@@ -259,7 +269,7 @@ def drawline(cnts, image, pixelsPerMetric, maxdim, saveimg):
         # show the output image
         cv2.imshow("Image", orig)
 
-        cv2.imwrite(top, orig)
+        # cv2.imwrite(top, orig)
 
         brightness = np.mean(image)
         # print brightness
@@ -374,6 +384,7 @@ def set_image_label():
         "status": "Ok"
     })
 
+
 ####################################################################################
 # FROM SERVING.PY
 ####################################################################################
@@ -391,52 +402,51 @@ def load_graph(model_file):
 
 @app.route('/classify_image', methods=['POST'])
 def classify_image():
-    files = flask.request.files
-    print(files)
-    print(len(files))
-    if flask.request.method == "POST":
-        if flask.request.files.get("image1top"):
-            # read the image in PIL format
-            image = flask.request.files.get("image1top").read()
-            image = Image.open(io.BytesIO(image))
-            print('saved image1top')
-            image.save(image1top, quality=80, optimize=True, progressive=True)
+    # files = flask.request.files
+    # print(files)
+    # print(len(files))
+    now = datetime.datetime.now()
+    if flask.request.files.get("image1top"):
+        # read the image in PIL format
+        image = flask.request.files.get("image1top").read()
+        image = Image.open(io.BytesIO(image))
+        topimgpath = os.path.join(top_image_folder, "{}_{}.jpg".format("image1top", now.strftime(datestring)))
+        print('saved image1top to {}'.format(topimgpath))
+        image.save(topimgpath, quality=80, optimize=True, progressive=True)
+    else:
+        return jsonify({
+            "image1top": "This field is required."
+        }), 400
 
-    if flask.request.method == "POST":
-        if flask.request.files.get("image1front"):
-            image = flask.request.files.get("image1front").read()
-            image = Image.open(io.BytesIO(image))
-            print('saved image1front')
-            image.save(image1front, quality=80, optimize=True, progressive=True)
+    if flask.request.files.get("image1front"):
+        image = flask.request.files.get("image1front").read()
+        image = Image.open(io.BytesIO(image))
+        frontimgpath = os.path.join(front_image_folder, "{}_{}.jpg".format("image1front", now.strftime(datestring)))
+        print('saved image1front to {}'.format(frontimgpath))
+        image.save(frontimgpath, quality=80, optimize=True, progressive=True)
+    else:
+        return jsonify({
+            "image1front": "This field is required."
+        }), 400
 
-    if flask.request.method == "POST":
-        if flask.request.files.get("image0top"):
-            # read the image in PIL format
-            image = flask.request.files.get("image0top").read()
-            image = Image.open(io.BytesIO(image))
-            print('saved image0top')
-            image.save(image0top, quality=80, optimize=True, progressive=True)
+    (length, width, height) = getsize(image0top, topimgpath, image0front, frontimgpath)
 
-    if flask.request.method == "POST":
-        if flask.request.files.get("image0front"):
-            image = flask.request.files.get("image0front").read()
-            image = Image.open(io.BytesIO(image))
-            print('saved image0front')
-            image.save(image0front, quality=80, optimize=True, progressive=True)
-
-    (length, width, height) = getsize(image0top, image1top, image0front, image1front)
-
-    if flask.request.method == "POST":
-        if flask.request.form.get("weightattr"):
-            attrpth = saveattr(attrpath, float(flask.request.form.get("weightattr")), length, width, height)
-
+    if flask.request.form.get("weightattr"):
+        attrpth = saveattr(attrpath, float(flask.request.form.get("weightattr")), length, width, height)
+    else:
+        return jsonify({
+            "weightattr": "This field is required."
+        }), 400
     df = attrpreprocess(attrpth)
-    image = imagepreprocess(image1top)
+    image = imagepreprocess(topimgpath)
     # model loaded externally faster
     labels = loadlabels(labelpath)
     categoryscore = predict(df, image, model)
     result = {"Category": categoryscore[0], "Probability": categoryscore[1]}
-
+    with open('new_data_row_by_row.csv', 'a') as f:
+        f.write(','.join([categoryscore[0], float(flask.request.form.get('weightattr')), length, width, height,
+                          now.strftime('%Y-%m-%d %H:%M:%S'), topimgpath, frontimgpath]))
+        f.write("\n")
     print (result)
     return json.dumps(result)
 
