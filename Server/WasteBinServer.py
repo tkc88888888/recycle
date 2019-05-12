@@ -303,6 +303,10 @@ def drawline(cnts, image, pixelsPerMetric, maxdim, saveimg):
                     return dimA
 
 
+def get_now():
+    return datetime.datetime.now()
+
+
 def getsize(image0top, image1top, image0front, image1front):
     topX = 352
     topY = 288
@@ -406,7 +410,7 @@ def classify_image():
     # files = flask.request.files
     # print(files)
     # print(len(files))
-    now = datetime.datetime.now()
+    now = get_now()
     if flask.request.files.get("image1top"):
         # read the image in PIL format
         image = flask.request.files.get("image1top").read()
