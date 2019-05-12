@@ -617,11 +617,17 @@ def saveDB(now, category, weight, length, width, height, topimgpath, frontimgpat
     try:  # try to execute insertion of info to databse and commit/save it, except when it fails, rollback/restore previous database state
         c.execute(sql, val)
         db.commit()
-
+    except (AttributeError, MySQLdb.OperationalError):
+        global db
+        global c
+        db = MySQLdb.connect("localhost", "recycle", "recycle",
+                             "wastedb")  # Calling imported module mysqldb to allow connection, input arguments are self set: host= localhost, username=remote, password=remote, database=mydb
+        c = db.cursor()
+        c.execute(sql, val)
+        db.commit()
     except (MySQLdb.Error, MySQLdb.Warning) as e:
         db.rollback()
         print 'error while saving to mysql: {}'.format(e)
-
     except NameError:
         print 'not connected to mysql'
 
