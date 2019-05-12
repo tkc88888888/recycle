@@ -44,7 +44,7 @@ import tensorflow as tf
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024
 
-datestring = time.strftime("%Y_%m_%d_%H_%M_%S")
+datestring = "%Y_%m_%d_%H_%M_%S"
 csvpath = "new_data_row_by_row.csv"
 attrpath = 'tmp/tmp.csv'
 modelpath = "model.hdf5"
@@ -303,10 +303,6 @@ def drawline(cnts, image, pixelsPerMetric, maxdim, saveimg):
                     return dimA
 
 
-def get_now():
-    return datetime.datetime.now()
-
-
 def getsize(image0top, image1top, image0front, image1front):
     topX = 352
     topY = 288
@@ -410,7 +406,7 @@ def classify_image():
     # files = flask.request.files
     # print(files)
     # print(len(files))
-    now = get_now()
+    now = datetime.datetime.now()
     if flask.request.files.get("image1top"):
         # read the image in PIL format
         image = flask.request.files.get("image1top").read()
